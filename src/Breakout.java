@@ -64,7 +64,7 @@ public class Breakout extends GraphicsProgram {
 
 	private GRect brick[][] = new GRect[NBRICK_ROWS][NBRICKS_PER_ROW];
 
-	private static final int DELAY = 1;
+	private static final int DELAY = 10;
 
 	private static final int RACKET_SPEED = 10;
 
@@ -126,8 +126,8 @@ public class Breakout extends GraphicsProgram {
 		exit = false;
 		over = true;
 		win = false;
-//		remove(gameover);
-//		remove(winner);
+		remove(gameover);
+		remove(winner);
 		vx = speedBullet(vx);
 		vy = -3.0;
 		for (int a = 0; a < NBRICK_ROWS; a++) {
@@ -319,8 +319,6 @@ public class Breakout extends GraphicsProgram {
 	}
 
 	public void mousePressed(MouseEvent e) {
-		remove(gameover);
-		remove(winner);
 		if (!over) {
 			restart();
 		}
