@@ -64,7 +64,7 @@ public class Breakout extends GraphicsProgram {
 
 	private GRect brick[][] = new GRect[NBRICK_ROWS][NBRICKS_PER_ROW];
 
-	private static final int DELAY = 10;
+	private static final int DELAY = 1;
 
 	private static final int RACKET_SPEED = 10;
 
@@ -94,7 +94,7 @@ public class Breakout extends GraphicsProgram {
 				collisions();
 				pause(DELAY);
 			}
-			if (exit && over && count != 100) {
+			if (exit && over && count!=100) {
 				showPictureGameOver();
 				over = false;
 			} else if (count == 100 && win) {
@@ -126,8 +126,8 @@ public class Breakout extends GraphicsProgram {
 		exit = false;
 		over = true;
 		win = false;
-		remove(gameover);
-		remove(winner);
+//		remove(gameover);
+//		remove(winner);
 		vx = speedBullet(vx);
 		vy = -3.0;
 		for (int a = 0; a < NBRICK_ROWS; a++) {
@@ -143,7 +143,6 @@ public class Breakout extends GraphicsProgram {
 	private GImage racketCreate() {
 		racket = new GImage("racket.GIF");
 		racket.scale(1, 0.7);
-		// racket.scale(1, 3);
 		racket.sendToBack();
 		add(racket, APPLICATION_WIDTH / 2 - racket.getWidth() / 2,
 				APPLICATION_HEIGHT - racket.getHeight() - 10);
@@ -157,10 +156,6 @@ public class Breakout extends GraphicsProgram {
 	}
 
 	private void collisions() {
-		pointTouch1 = false;
-		pointTouch2 = false;
-		pointTouch3 = false;
-		pointTouch4 = false;
 		collider = getCollidingObject();
 		if (collider != null && collider != racket) {
 			changeDirection();
@@ -172,19 +167,21 @@ public class Breakout extends GraphicsProgram {
 			}
 		}
 		if (checkRacket(bullet.getX() + BALL_RADIUS / 2, bullet.getY())) {
-			pointTouch1 = true;
-			changeDirection();
+			if (vy > 0) {
+				vy = (-1) * vy;
+			}
 		} else if (checkRacket(bullet.getX() + BALL_RADIUS, bullet.getY()
 				+ BALL_RADIUS / 2)) {
-			pointTouch2 = true;
-			changeDirection();
+			if (vx > 0) {
+				vx = (-1) * vx;
+			}
 		} else if (checkRacket(bullet.getX() + BALL_RADIUS / 2, bullet.getY()
 				+ BALL_RADIUS)) {
-			pointTouch3 = true;
-			changeDirection();
+			if (vy > 0) {
+				vy = (-1) * vy;
+			} 
 		} else if (checkRacket(bullet.getX(), bullet.getY() + BALL_RADIUS / 2)) {
-			pointTouch4 = true;
-			changeDirection();
+				vx = (-1) * vx;
 		}
 	}
 
@@ -198,6 +195,11 @@ public class Breakout extends GraphicsProgram {
 	}
 
 	private GObject getCollidingObject() {
+		pointTouch1 = false;
+		pointTouch2 = false;
+		pointTouch3 = false;
+		pointTouch4 = false;
+		
 		point1 = getElementAt(bullet.getX() + BALL_RADIUS / 2,
 				bullet.getY() - 1);
 		point2 = getElementAt(bullet.getX() + BALL_RADIUS, bullet.getY()
@@ -235,10 +237,10 @@ public class Breakout extends GraphicsProgram {
 
 	public void checkBarriers() {
 		if (bullet.getY() + BALL_RADIUS > APPLICATION_HEIGHT) {
-			if (vy > 0 && vx < 0)
-				vy = -vy;
-			if (vy > 0 && vx > 0)
-				vy = -vy;
+//			if (vy > 0 && vx < 0)
+//				vy = -vy;
+//			if (vy > 0 && vx > 0)
+//				vy = -vy;
 			// умова виходу мяча за нижню стінку
 			exit = true;
 		} else if (bullet.getX() + BALL_RADIUS > APPLICATION_WIDTH) {
@@ -317,8 +319,9 @@ public class Breakout extends GraphicsProgram {
 	}
 
 	public void mousePressed(MouseEvent e) {
-		// GPoint has X and Y coordinate
-		if (exit) {
+		remove(gameover);
+		remove(winner);
+		if (!over) {
 			restart();
 		}
 	}
